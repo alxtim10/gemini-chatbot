@@ -2,17 +2,19 @@ import { Fragment, JSX, useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 import ReactMarkdown from 'react-markdown'
 import { marked } from "marked";
+import Loading from "../loading/Loading";
 
 interface ChatBubbleProps {
     text: string;
     delay?: number;
     isUser: boolean;
+    isLoading?: boolean;
 }
 
 type Word = { word: string; className: string }
 type Block = { tag: string; words: Word[] }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser, isLoading }) => {
     const [blocks, setBlocks] = useState<Block[]>([])
 
     useEffect(() => {
@@ -77,7 +79,7 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser }) =>
 
     return (
         <Fragment>
-            {!isUser && (
+            {!isUser && !isLoading && (
                 <div
                     className={`rounded-2xl whitespace-pre-wrap text-sm leading-relaxed h-fit
         ${isUser ? 'bg-[#313131] py-3 px-4 text-white' : 'text-white'
@@ -108,6 +110,9 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser }) =>
                         )
                     })}
                 </div>
+            )}
+            {!isUser && isLoading && (
+                <Loading />
             )}
             {isUser && (
                 <motion.p

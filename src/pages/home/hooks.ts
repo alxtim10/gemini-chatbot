@@ -1,7 +1,7 @@
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { GetTextOnly } from "../../hooks/promptHooks";
 
-interface MessageType {
+export interface MessageType {
     id: string,
     text: string,
     isUser: boolean,
