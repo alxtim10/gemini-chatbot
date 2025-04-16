@@ -1,25 +1,12 @@
-import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Home from './pages/home/Home';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <main>
+      <h1 className="fixed border-b border-b-[#313131] w-full font-semibold h-[60px] flex items-center justify-center text-xl bg-[#212121]">FitGPT</h1>
+      <Home />
+    </main>
   );
 }
 
