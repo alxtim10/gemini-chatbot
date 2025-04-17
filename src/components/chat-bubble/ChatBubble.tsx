@@ -9,12 +9,13 @@ interface ChatBubbleProps {
     delay?: number;
     isUser: boolean;
     isLoading?: boolean;
+    image?: File | null
 }
 
 type Word = { word: string; className: string }
 type Block = { tag: string; words: Word[] }
 
-const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser, isLoading }) => {
+const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser, isLoading, image }) => {
     const [blocks, setBlocks] = useState<Block[]>([])
 
     useEffect(() => {
@@ -120,7 +121,20 @@ const ChatBubble: React.FC<ChatBubbleProps> = ({ text, delay = 150, isUser, isLo
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2 }}
                     className={`bg-[#313131] py-3 px-4 text-sm max-w-[300px] md:max-w-[420px] text-white rounded-2xl flex flex-wrap gap-x-1`}>
-                    {text}
+                    {image ? (
+                        <div className="flex flex-col gap-3">
+                            <img
+                                src={URL.createObjectURL(image)}
+                                alt="preview"
+                                className="max-h-56  rounded-xl object-cover"
+                            />
+                            {text}
+                        </div>
+                    ) : (
+                        <>
+                            {text}
+                        </>
+                    )}
                 </motion.p>
             )}
         </Fragment>

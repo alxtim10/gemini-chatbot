@@ -5,7 +5,8 @@ export interface MessageType {
     id: string,
     text: string,
     isUser: boolean,
-    isLoading?: boolean
+    isLoading?: boolean,
+    image?: File | null
 }
 
 export const useHome = () => {
@@ -14,8 +15,8 @@ export const useHome = () => {
     const [isFirstLoad, setIsFirstLoad] = useState<boolean>(true);
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [messages, setMessages] = useState<MessageType[]>([]);
-    const [response, setResponse] = useState<string>();
     const chatEndRef = useRef<HTMLDivElement | null>(null);
+    const [image, setImage] = useState<File | null>();
 
     const handleInput = (e: ChangeEvent<HTMLTextAreaElement>) => {
         const textarea = textareaRef.current;
@@ -24,6 +25,7 @@ export const useHome = () => {
             textarea.style.height = textarea.scrollHeight + 'px';
         }
         setQuery(e.target.value);
+        setImage(null);
     };
 
     const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -31,7 +33,6 @@ export const useHome = () => {
             setIsFirstLoad(false);
             e.preventDefault();
             handleGetPrompt();
-
         }
     };
 
@@ -41,13 +42,14 @@ export const useHome = () => {
 
     useEffect(() => {
         scrollToBottom();
-      }, [messages]);
+    }, [messages]);
 
     const handleGetPrompt = async () => {
         const userMessage: MessageType = {
             id: crypto.randomUUID(),
             isUser: true,
             text: query,
+            image: image
         };
 
         const loadingId = crypto.randomUUID();
@@ -62,10 +64,22 @@ export const useHome = () => {
         setQuery('');
 
         try {
-            const res = await fetch(`https://ftmobile.inhealth.co.id/gen-ai/api/TextOnly?prompt=${query}`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-            });
+            let res;
+            if (!image) {
+                res = await fetch(`https://ftmobile.inhealth.co.id/gen-ai/api/TextOnly?prompt=${query}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            } else {
+                res = await fetch(`https://ftmobile.inhealth.co.id/gen-ai/api/TextAndImage?prompt=${query}`, {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        file: image
+                    }),
+                    headers: { 'Content-Type': 'application/json' },
+                });
+            }
+
             const data = await res.text(); // or `await res.json()` depending on your API
 
             setMessages(prev =>
@@ -92,8 +106,8 @@ export const useHome = () => {
         handleInput,
         handleKeyDown,
         handleGetPrompt,
-        response,
-        setResponse,
-        chatEndRef
+        chatEndRef,
+        image,
+        setImage
     }
 } 
