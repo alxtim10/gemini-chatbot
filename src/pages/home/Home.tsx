@@ -36,7 +36,7 @@ const Home = () => {
           <section className="w-full flex items-center justify-center">
             <div className="flex flex-col items-center justify-center gap-6 w-full px-8">
               <h1 className="font-semibold text-lg sm:text-2xl">
-                How can I help you today?
+                How can I help you?
               </h1>
             </div>
           </section>
